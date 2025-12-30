@@ -1,0 +1,26 @@
+{
+  "configurations": [
+    {
+      "browse": {
+        "databaseFilename": "${default}",
+        "limitSymbolsToIncludedHeaders": false
+      },
+      "includePath": [
+        "/home/lym/zhang/deploy/devel/include/**",
+        "/opt/ros/noetic/include/**",
+        "/home/lym/zhang/deploy/src/deploy/include/**",
+        "/home/lym/zhang/deploy/src/simulation/sim/include/**",
+        "/home/lym/zhang/deploy/src/library/onnxruntime/include/**",
+        "/home/lym/zhang/deploy/src/library/libtorch/include/**",
+        "/home/lym/zhang/deploy/src/deploy/library/Joy_SDK/include/**",
+        "/usr/include/**"
+      ],
+      "name": "ROS",
+      "intelliSenseMode": "gcc-x64",
+      "compilerPath": "/usr/bin/gcc",
+      "cStandard": "gnu11",
+      "cppStandard": "c++14"
+    }
+  ],
+  "version": 4
+}

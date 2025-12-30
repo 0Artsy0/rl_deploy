@@ -1,0 +1,3 @@
+<launch>
+    <node pkg="sim" type="sim2sim_mujoco" name="sim2sim_mujoco" output="screen"/>
+</launch>

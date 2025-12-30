@@ -1,0 +1,44 @@
+<?xml version="1.0"?>
+
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro">
+
+    <!-- 修改传输配置以匹配实际的关节命名 -->
+    <xacro:macro name="leg_transmission" params="prefix">
+        <!-- HipX关节传输 -->
+        <transmission name="${prefix}_HipX_trans">
+            <type>transmission_interface/SimpleTransmission</type>
+            <joint name="${prefix}_HipX_joint">
+                <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
+            </joint>
+            <actuator name="${prefix}_HipX_motor">
+                <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
+                <mechanicalReduction>1</mechanicalReduction>
+            </actuator>
+        </transmission>
+
+        <!-- HipY关节传输 -->
+        <transmission name="${prefix}_HipY_trans">
+            <type>transmission_interface/SimpleTransmission</type>
+            <joint name="${prefix}_HipY_joint">
+                <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
+            </joint>
+            <actuator name="${prefix}_HipY_motor">
+                <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
+                <mechanicalReduction>1</mechanicalReduction>
+            </actuator>
+        </transmission>
+
+        <!-- Knee关节传输 -->
+        <transmission name="${prefix}_Knee_trans">
+            <type>transmission_interface/SimpleTransmission</type>
+            <joint name="${prefix}_Knee_joint">
+                <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
+            </joint>
+            <actuator name="${prefix}_Knee_motor">
+                <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
+                <mechanicalReduction>1</mechanicalReduction>
+            </actuator>
+        </transmission>
+    </xacro:macro>
+
+</robot>

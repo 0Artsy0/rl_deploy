@@ -1,0 +1,1 @@
+/usr/bin/c++     CMakeFiles/joystick_reader.dir/src/Joy_interface.cpp.o CMakeFiles/joystick_reader.dir/src/joy_stick_test.cpp.o  -o joystick_reader  -lpthread 

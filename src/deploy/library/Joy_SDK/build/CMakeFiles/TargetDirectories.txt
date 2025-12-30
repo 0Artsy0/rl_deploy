@@ -1,0 +1,3 @@
+/home/lym/zhang/deploy/src/deploy/library/Joy_SDK/build/CMakeFiles/rebuild_cache.dir
+/home/lym/zhang/deploy/src/deploy/library/Joy_SDK/build/CMakeFiles/edit_cache.dir
+/home/lym/zhang/deploy/src/deploy/library/Joy_SDK/build/CMakeFiles/joystick_reader.dir
