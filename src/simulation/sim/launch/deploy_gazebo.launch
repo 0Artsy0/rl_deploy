@@ -48,7 +48,7 @@
     </node>
 
     <!-- 初始化机器人状态发布者 -->
-    <node pkg="sim" type="sim2sim_gazebo" name="sim2sim_gazebo" output="screen"/>
+    <!-- <node pkg="sim" type="sim2sim_gazebo" name="sim2sim_gazebo" output="screen"/> -->
 
     <!-- Load joy node -->
     <!-- <node pkg="joy" type="joy_node" name="joy_node" output="screen"/> -->
