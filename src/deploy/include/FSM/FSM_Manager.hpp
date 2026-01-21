@@ -40,7 +40,6 @@ public:
 };
 FSM_Manager::FSM_Manager(const std::string &sim_engine, const std::string &model_type) : Data(sim_engine), _model_type(model_type), _sim_engine(sim_engine) // 创建状态机列表
 {
-    
     FSM_List.Disable = new FSM_Disable("Disable", Data.hardware);
     FSM_List.Passive = new FSM_Passive("Passive", Data.hardware);
     FSM_List.StandUp = new FSM_Getup("StandUp", Data.hardware, &Data.Previous_state);
@@ -53,13 +52,11 @@ FSM_Manager::FSM_Manager(const std::string &sim_engine, const std::string &model
 
 FSM_Manager::~FSM_Manager()
 {
-    // 释放状态机内存
     delete FSM_List.Disable;
     delete FSM_List.Passive;
     delete FSM_List.StandUp;
     delete FSM_List.Getdown;
     delete FSM_List.RL_Control;
-
 }
 
 FSM_State *FSM_Manager::state_change(RobotState_List &next_state)
@@ -86,11 +83,11 @@ void FSM_Manager::run()
             return;
         }
 
-        if (Data.Next_state != Data.Current_state_)
+        if (Data.Next_state != Data.Current_state)
         {
             current_state_->exit();
-            Data.Previous_state = Data.Current_state_;
-            Data.Current_state_ = Data.Next_state;
+            Data.Previous_state = Data.Current_state;
+            Data.Current_state = Data.Next_state;
             current_state_ = state_change(Data.Next_state);
 
             current_state_->enter();

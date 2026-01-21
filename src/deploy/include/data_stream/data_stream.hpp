@@ -15,17 +15,16 @@
 
 enum class RobotState_List
 {
-    StandUp,    // 起立模式
-    RL_Control, // 强化学习控制模式
-    Disable,    // 失能模式
-    Passive,    // 阻尼模式
-    Getdown     // 蹲下模式
+    StandUp,
+    RL_Control,
+    Disable,
+    Passive,
+    Getdown
 };
 
 class data_stream
 {
 private:
-    ros::NodeHandle _nh;
     JoyInterface _joy_stick;
 
     std::thread _data_stream_thread;
@@ -39,10 +38,10 @@ public:
     ~data_stream();
 
     std::vector<float> command;
-    hardware_interface *hardware;
-
+    hardware_interface *hardware=nullptr;
+ 
     RobotState_List Previous_state;
-    RobotState_List Current_state_;
+    RobotState_List Current_state;
     RobotState_List Next_state;
 
     void joy_stick_command_update();
@@ -56,10 +55,8 @@ data_stream::data_stream(const std::string &sim_engine)
 {
     running = true;
 
-    _data_stream_timer.start(500.0, std::bind(&data_stream::_data_streaming_callback, this), "data_stream_timer");
-
     Previous_state = RobotState_List::Disable;
-    Current_state_ = RobotState_List::Disable;
+    Current_state = RobotState_List::Disable;
     Next_state = RobotState_List::Disable;
 
     command.resize(3);
@@ -68,6 +65,11 @@ data_stream::data_stream(const std::string &sim_engine)
         hardware = new gazebo_interface();
     else if (sim_engine == "mujoco")
         hardware = new mujoco_interface();
+    else
+        hardware = nullptr;
+
+    _data_stream_timer.start(500.0, std::bind(&data_stream::_data_streaming_callback, this), "data_stream_timer");
+
 }
 
 data_stream::~data_stream()
@@ -78,9 +80,7 @@ data_stream::~data_stream()
 void data_stream::_data_streaming_callback()
 {
     if (!running)
-    {
         return;
-    }
 
     try
     {
@@ -98,18 +98,21 @@ void data_stream::_data_streaming_callback()
 
 void data_stream::joy_stick_command_update()
 {
-
     command[0] = _joy_stick.current_state_.LS[1] * command_scale[1]; // x
     command[1] = _joy_stick.current_state_.LS[0] * command_scale[0]; // y
     command[2] = _joy_stick.current_state_.RS[0] * command_scale[2]; // yaw
 
-    if (_joy_stick.current_state_.LB && _joy_stick.current_state_.RB || 
-        !joint_safety_check(hardware->pos,hardware->vel) || 
-        !body_safety_check(hardware->gravity_projection))
+    if (_joy_stick.current_state_.LB && _joy_stick.current_state_.RB)
     {
         Next_state = RobotState_List::Passive;
         return;
     }
+
+    // if (hardware->data_received&&(!joint_safety_check(hardware->pos,hardware->vel) || !body_safety_check(hardware->gravity_projection)))
+    // {
+    //     Next_state = RobotState_List::Passive;
+    //     return;
+    // }
 
     bool A_pressed = _joy_stick.current_state_.A;
     bool Y_pressed = _joy_stick.current_state_.Y;
@@ -117,7 +120,7 @@ void data_stream::joy_stick_command_update()
     bool B_pressed = _joy_stick.current_state_.B;
     bool RB_pressed = _joy_stick.current_state_.RB;
 
-    switch (Current_state_)
+    switch (Current_state)
     {
     case RobotState_List::Disable:
         if (Y_pressed && RB_pressed) // Y+RB进入阻尼模式

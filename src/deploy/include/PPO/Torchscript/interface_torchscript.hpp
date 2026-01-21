@@ -76,7 +76,7 @@ void InterfaceTorchscript::push_forward()// 策略网络前向推理
         set_act(act);//动作的缩放映射
         // Store action in data
 
-        data.obs.last_action = act;
+        // data.obs.last_action = act;
     }
     catch (const std::exception &e) // 捕获Torch推理过程中可能抛出的异常
     {

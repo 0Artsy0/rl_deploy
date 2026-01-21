@@ -40,6 +40,10 @@ include_directories(
   ${ONNXRUNTIME_INCLUDE_DIR}
 )
 
+# 设置模型文件路径
+set(POLICY_MODEL_PATH "${CMAKE_CURRENT_SOURCE_DIR}/../policy/")
+add_definitions(-DPOLICY_MODEL_PATH="${POLICY_MODEL_PATH}")
+
 add_executable(rl_deploy src/deploy.cpp)
 
 target_link_libraries(rl_deploy

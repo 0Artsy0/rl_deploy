@@ -50,7 +50,7 @@ private:
   std::mutex data_mutex;             // 用于保护数据访问的互斥锁
   std::vector<double> mujoco_torque; //  mujoco 关节力矩
 
-  const char *filename = "/home/lym/zhang/deploy/src/robot_description/go2/go2_mjcf/scene.xml";
+  const char *filename = ROBOT_DESCRIPTION_PATH "/go2/go2_mjcf/scene.xml";
 
   // thread
   std::thread physicsthreadhandle; // 物理仿真线程

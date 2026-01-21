@@ -58,6 +58,9 @@ private:
 public:
     gazebo_interface(const std::string &hardware_name="gazebo_interface") : hardware_interface(hardware_name) // 初始化
     {
+        running = true;
+        data_received = false;
+
         _sub.resize(_robot_param.dof_nums); // 订阅关节状态
         _pub.resize(_robot_param.dof_nums); // 发布关节控制命令
 
@@ -69,10 +72,12 @@ public:
         _imu_sub = _nh.subscribe<sensor_msgs::Imu>(imu_topic[0], 10, &gazebo_interface::imu_callback, this); // 订阅imu状态
         
         _gazebo_control_thread = std::thread(&gazebo_interface::gazebo_control, this); // 启动控制线程
+
     }
 
-    void gazebo_interface::motor_state_callback(const robot_msgs::MotorState::ConstPtr &msg, int index) // 电机状态回调函数
+    void motor_state_callback(const robot_msgs::MotorState::ConstPtr &msg, int index) // 电机状态回调函数
     {
+        data_received = true;
         pos[index] = (*msg).q;  // 位置
         vel[index] = (*msg).dq; // 速度
     }
@@ -101,7 +106,7 @@ public:
     void gazebo_control() // 控制线程函数
     {
         ros::Rate rate(interfaze_rate);
-        while (ros::ok())
+        while (running)
         {
             cmd_publish();
             ros::spinOnce();
@@ -115,6 +120,7 @@ public:
         {
             _gazebo_control_thread.join();
         }
+        running = false;
     }
 };
 

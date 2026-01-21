@@ -1,17 +1,14 @@
 cmake_minimum_required(VERSION 3.0.2)
 project(sim)
 
-## 设置C++标准
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
-## 设置OpenGL策略以消除警告
 if(POLICY CMP0072)
   cmake_policy(SET CMP0072 NEW)
   set(OpenGL_GL_PREFERENCE "GLVND")
 endif()
 
-## 查找catkin宏和库
 find_package(catkin REQUIRED COMPONENTS
   roscpp
   rospy
@@ -27,8 +24,7 @@ find_package(OpenGL REQUIRED)
 find_package(PkgConfig REQUIRED)
 pkg_check_modules(GLFW REQUIRED glfw3)
 
-## 设置MuJoCo路径
-set(MUJOCO_DIR "/home/lym/zhang/deploy/src/library/mujoco")
+set(MUJOCO_DIR "${CMAKE_CURRENT_SOURCE_DIR}/../../library/mujoco")
 set(MUJOCO_INCLUDE_DIR "${MUJOCO_DIR}/include")
 set(MUJOCO_LIBRARY "${MUJOCO_DIR}/lib/libmujoco.so")
 
@@ -96,19 +92,6 @@ target_link_libraries(sim2sim_gazebo
   ${catkin_LIBRARIES}
 )
 
-## 安装目标
-install(TARGETS
-  sim2sim_mujoco
-  sim2sim_gazebo
-  ARCHIVE DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
-  LIBRARY DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
-  RUNTIME DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
-)
-
-install(DIRECTORY include/${PROJECT_NAME}/
-  DESTINATION ${CATKIN_PACKAGE_INCLUDE_DESTINATION}
-)
-
-install(DIRECTORY launch/
-  DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION}/launch
-)
+# 设置机器人描述文件路径
+set(ROBOT_DESCRIPTION_PATH "${CMAKE_CURRENT_SOURCE_DIR}/../../robot_description")
+add_definitions(-DROBOT_DESCRIPTION_PATH="${ROBOT_DESCRIPTION_PATH}")

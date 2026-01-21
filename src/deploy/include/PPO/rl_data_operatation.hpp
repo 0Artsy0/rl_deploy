@@ -85,7 +85,7 @@ void RLDataOperation::data_clip(std::vector<float> &obs)//数据裁剪，全部�
 std::vector<float> RLDataOperation::set_obs()
 {
 /*==============================================观测量进行整合===================================================*/
-    std::vector<float> integrated_obs(_robot_param._obs_dim);
+    std::vector<float> integrated_obs;
 
     for (size_t i = 0; i < 3; i++)//角速度缩放整合
         integrated_obs.push_back(data.obs.angular_vel[i] * _robot_param._omega_scale); // 角速度缩放
@@ -93,11 +93,11 @@ std::vector<float> RLDataOperation::set_obs()
         integrated_obs.push_back(data.obs.gravity_projection[i]); // 重力投影缩放
     for (int i = 0; i < 3; ++i)//控制命令缩放整合
         integrated_obs.push_back(data.obs.command[i]); // 控制命令缩放
-    for (int i = 0; i < 12; ++i)//关节角度整合
+    for (int i = 0; i < _robot_param.dof_nums; ++i)//关节角度整合
         integrated_obs.push_back((data.obs.joint_angle[i] - _robot_param._dof_pos_rl[i]) * _robot_param._dof_pos_scale); // 关节角度默认值(全部为当前的默认角度的偏移量)
-    for (int i = 0; i < 12; ++i)//关节速度整合
+    for (int i = 0; i < _robot_param.dof_nums; ++i)//关节速度整合
         integrated_obs.push_back(data.obs.joint_vel[i] * _robot_param._dof_vel_scale); // 关节速度默认值(全部为当前的默认速度的偏移量)
-    for (int i = 0; i < 12; ++i)//上一个动作整合
+    for (int i = 0; i < _robot_param.dof_nums; ++i)//上一个动作整合
         integrated_obs.push_back(data.obs.last_action[i]); // 上一个动作默认值(全部为当前的默认动作的偏移量)
 
     data_clip(integrated_obs);
@@ -108,14 +108,24 @@ void RLDataOperation::set_act(const std::vector<float> &act)
     std::vector<float> processed_action;
     for (int i = 0; i < act.size(); ++i)
         processed_action.push_back(act[i] * _robot_param._action_scale_robot[i]+ _robot_param._dof_pos_rl[i]);
+
     data.act.action.push_back(processed_action);
+
+    const size_t max_history_size = 6;
+    if (data.act.action.size() > max_history_size) {
+        data.act.action.erase(data.act.action.begin());
+    }
+
 }
 std::vector<float> RLDataOperation::get_act()
 {
-    // return data.act.action;
-    std::vector<float> latest_action = data.act.action.back();
-    data.act.action.pop_back();
-    return latest_action;
+    // 安全检查：确保动作队列不为空
+    if (data.act.action.empty()) {
+        std::cerr << "Warning: Action queue is empty! Returning default action." << std::endl;
+        return std::vector<float>(_robot_param.dof_nums, 0.0f);
+    }
+
+    return data.act.action.back();
 }
 
 void RLDataOperation::observation_set(std::vector<float> angular_vel, std::vector<float> gravity_projection, std::vector<float> command, std::vector<float> joint_angle, std::vector<float> joint_vel)

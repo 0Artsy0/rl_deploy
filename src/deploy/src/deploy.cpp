@@ -2,18 +2,19 @@
 #include <ros/ros.h>
 #include "FSM/FSM_Manager.hpp"
 #include "Timer/thread_Timer.hpp"
-
+#include <iostream>
 class deploy
 {
 private:
     FSM_Manager FSM_Deploy;
     thread_Timer rl_Deploy_thread;
-public:
-    deploy(const std::string &sim_engine, const std::string &model_type):
-    FSM_Deploy(sim_engine,model_type){
-        rl_Deploy_thread.start(500.0,std::bind(&FSM_Manager::run,&FSM_Deploy));
-    }
 
+public:
+    deploy(const std::string &sim_engine, const std::string &model_type)
+      :FSM_Deploy(sim_engine,model_type){
+        rl_Deploy_thread.start(250.0,std::bind(&FSM_Manager::run,&FSM_Deploy));
+    }
+  
     ~deploy(){
         rl_Deploy_thread.stop();
     }
@@ -25,7 +26,7 @@ int main(int argc, char *argv[])
     ros::init(argc, argv, "go2_deploy");
 
     if (argc!=3){
-        ROS_ERROR("example: ./rl_deploy (gazebo or sim2sim) (torchscript ro onnx)");
+        ROS_ERROR("example: ./rl_deploy (gazebo or mujoco) (torchscript ro onnx)");
         return 1;
     }
 

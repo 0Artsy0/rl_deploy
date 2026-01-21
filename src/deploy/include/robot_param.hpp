@@ -16,7 +16,7 @@ public:
 
     /*====================================================base_parameters============================================================= */
     const float Safety_Factor = 0.8; // 安全系数因子
-    const float dof_nums = 12;
+    const int dof_nums = 12;
 
     // 关节额定参数
     const float Max_torque = 30.0 * Safety_Factor; // 电机最大扭矩(N·m)
@@ -31,9 +31,9 @@ public:
 
     std::vector<std::vector<float>> joint_limit = // 关节参数
         {
-            {-0.7, -0.7}, // Hip
-            {-1.3, 1.3},  // Thigh
-            {-2.1, 2.1}   // Calf
+            {-1.06, 1.06}, // Hip
+            {-1.57, 3.49},  // Thigh
+            {-2.74, -0.84}   // Calf
     };
 
    std::vector<float> _dof_pos_robot = {

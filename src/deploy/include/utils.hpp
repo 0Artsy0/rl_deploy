@@ -40,19 +40,20 @@ bool joint_safety_check(std::vector<float> &joint_pos,std::vector<float> &joint_
     
     for (size_t j = 0; j < 4; j++){
         for (size_t i = 0; i < single_joint_num; i++) {
-                if (joint_pos[j*single_joint_num+i] < _robot_param.joint_limit[i][0] || joint_pos[j*single_joint_num+i] > _robot_param.joint_limit[i][1]) {
-                    std::cerr << "Warning: Joint " << j*single_joint_num+i << " position out of range: " << joint_pos[j*single_joint_num+i] << std::endl;
-                    return false;
-                }
+            if (joint_pos[j*single_joint_num+i] < _robot_param.joint_limit[i][0] || joint_pos[j*single_joint_num+i] > _robot_param.joint_limit[i][1]) {
+                std::cerr << "Warning: Joint " << j*single_joint_num+i << " position out of range: " << joint_pos[j*single_joint_num+i] << std::endl;
+                return false;
             }
+        }
     }
-   
+
     for(size_t i = 0; i < joint_vel.size(); i++){
          if(std::abs(joint_vel[i])>_robot_param.Max_speed){
             std::cerr << "Warning: Joint " << i << " velocity too high: " << joint_vel[i] << " rad/s" << std::endl;
             return false;
         }
     }
+    
     return true;
 }
 

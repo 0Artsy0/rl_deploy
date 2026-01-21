@@ -10,8 +10,6 @@ class hardware_interface
 {
 private:
     std::string hardware_name;
-
-
 public:
     robot_param _robot_param; // 机器人参数
 
@@ -30,19 +28,23 @@ public:
     std::vector<float> gravity_projection;//重力投影
     std::vector<float> angle_vel;//机身角速度
 
-    hardware_interface(const std::string &hardware_name)//初始化
+    bool running = false;
+    bool data_received = false;
+    
+    hardware_interface(const std::string &hardware_name=""):_robot_param()
     {
         this->hardware_name=hardware_name;
-        pos.resize(_robot_param.dof_nums);
-        vel.resize(_robot_param.dof_nums);
+        
+        pos.resize(_robot_param.dof_nums,0.0f);
+        vel.resize(_robot_param.dof_nums,0.0f);
 
-        cmd_pos.resize(_robot_param.dof_nums);
-        cmd_vel.resize(_robot_param.dof_nums);
-        cmd_torque.resize(_robot_param.dof_nums);
-        kp.resize(_robot_param.dof_nums);
-        kd.resize(_robot_param.dof_nums);
-        gravity_projection.resize(3);
-        angle_vel.resize(3);
+        cmd_pos.resize(_robot_param.dof_nums,0.0f);
+        cmd_vel.resize(_robot_param.dof_nums,0.0f);
+        cmd_torque.resize(_robot_param.dof_nums,0.0f);
+        kp.resize(_robot_param.dof_nums,0.0f);
+        kd.resize(_robot_param.dof_nums,0.0f);
+        gravity_projection.resize(3,0.0f);
+        angle_vel.resize(3,0.0f);
     }
     virtual ~hardware_interface()=default;
 
